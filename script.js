@@ -4,6 +4,7 @@ window.onload = () => {
   canvas.width = 800; 
   canvas.height = 720;
   let enemies = [];
+  let score = 0;
 
   class InputHandler {
     constructor() {
@@ -79,9 +80,11 @@ window.onload = () => {
       this.y += this.vy;
       if (!this.onGround()) {
         this.vy += this.weight;
+        this.maxFrame = 5;
         this.frameY = 1;
       } else {
         this.vy = 0;
+        this.maxFrame = 8;
         this.frameY= 0;
       }
       if (this.y > this.gameHeight - this.height) this.y = this.gameHeight - this.height;
@@ -127,6 +130,7 @@ window.onload = () => {
       this.frameTimer = 0;
       this.frameInterval = 1000 / this.fps;
       this.speed = 8;
+      this.markedForDeletion = false;
     }
     draw(context) {
       context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
@@ -140,12 +144,14 @@ window.onload = () => {
         this.frameTimer += deltaTime;
       }
       this.x -= this.speed;
+      if (this.x < 0 - this.width) this.markedForDeletion = true;
     }
   };
 
   const handleEnemies = (deltaTime) => {
     if (enemyTimer > enemyInterval + randomEnemyInterval) {
       enemies.push(new Enemy(canvas.width, canvas.height));
+      randomEnemyInterval = Math.random() * 1000 + 500;
       enemyTimer = 0;
     } else {
       enemyTimer += deltaTime;
@@ -154,10 +160,13 @@ window.onload = () => {
       enemy.draw(ctx);
       enemy.update(deltaTime);
     })
+    enemies = enemies.filter(enemy => !enemy.markedForDeletion);
   };
 
-  const displayStatusText = () => {
-
+  const displayStatusText = (context) => {
+    context.fillStyle = 'black';
+    canvas.font = '40px Helvetica';
+    context.fillText(`Score: ${score}`, 20, 50);
   };
 
   const input = new InputHandler();
@@ -178,6 +187,7 @@ window.onload = () => {
     player.draw(ctx);
     player.update(input, deltaTime);
     handleEnemies(deltaTime);
+    displayStatusText(ctx);
     requestAnimationFrame(animate);
   };
   animate(0);
