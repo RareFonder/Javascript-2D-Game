@@ -44,8 +44,6 @@ window.onload = () => {
       this.weight = 1;
     }
     draw(context) {
-      context.fillStyle = 'white';
-      context.fillRect(this.x, this.y, this.width, this.height);
       context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
     }
     update(input) {
@@ -110,17 +108,23 @@ window.onload = () => {
       this.x = this.gameWidth;
       this.y = this.gameHeight - this.height;
       this.frameX = 0;
+      this.speed = 8;
     }
     draw(context) {
       context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
     }
     update() {
-      this.x--;
+      this.x -= this.speed;
     }
   };
 
-  enemies.push(new Enemy(canvas.width, canvas.height));
-  const handleEnemies = () => {
+  const handleEnemies = (deltaTime) => {
+    if (enemyTimer > enemyInterval + randomEnemyInterval) {
+      enemies.push(new Enemy(canvas.width, canvas.height));
+      enemyTimer = 0;
+    } else {
+      enemyTimer += deltaTime;
+    }
     enemies.forEach(enemy => {
       enemy.draw(ctx);
       enemy.update();
@@ -136,6 +140,9 @@ window.onload = () => {
   const background = new Background(canvas.width, canvas.height);
 
   let lastTime = 0;
+  let enemyTimer = 0;
+  let enemyInterval = 2000;
+  let randomEnemyInterval = Math.random() * 1000 + 500;
 
   const animate = (timeStamp) => {
     const deltaTime = timeStamp - lastTime;
@@ -145,8 +152,8 @@ window.onload = () => {
     background.update();
     player.draw(ctx);
     player.update(input);
-    handleEnemies();
+    handleEnemies(deltaTime);
     requestAnimationFrame(animate);
-  }
+  };
   animate(0);
 };
