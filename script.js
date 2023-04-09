@@ -28,7 +28,23 @@ window.onload = () => {
   };
 
   class Player {
-
+    constructor(gameWidth, gameHeight) {
+      this.gameWidth = gameWidth;
+      this.gameHeight = gameHeight;
+      this.width = 200;
+      this.height = 200;
+      this.x = 0;
+      this.y = this.gameHeight - this.height;
+      this.image = playerImage;
+    }
+    draw(context) {
+      context.fillStyle = 'white';
+      context.fillRect(this.x, this.y, this.width, this.height);
+      context.drawImage(this.image, this.x, this.y, this.width, this.height);
+    }
+    update() {
+      this.x++;
+    }
   };
 
   class Background {
@@ -48,8 +64,13 @@ window.onload = () => {
   };
 
   const input = new InputHandler();
+  const player = new Player(canvas.width, canvas.height);
 
   const animate = () => {
-
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    player.draw(ctx);
+    player.update();
+    requestAnimationFrame(animate);
   }
+  animate();
 };
