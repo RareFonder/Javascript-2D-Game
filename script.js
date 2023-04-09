@@ -40,7 +40,7 @@ window.onload = () => {
       this.frameY = 0;
       this.speed = 0;
       this.vy = 0;
-      this.weight = 0;
+      this.weight = 1;
     }
     draw(context) {
       context.fillStyle = 'white';
@@ -53,7 +53,7 @@ window.onload = () => {
       } else if (input.keys.indexOf('ArrowLeft') > -1 || input.keys.indexOf('a') > -1) {
         this.speed = -5;
       } else if ((input.keys.indexOf('ArrowUp') > -1 || input.keys.indexOf('w') > -1) && this.onGround()) {
-        this.vy -= 20;
+        this.vy -= 30;
       } else {
         this.speed = 0;
       }
@@ -64,17 +64,33 @@ window.onload = () => {
 
       // Vertical movement
       this.y += this.vy;
-      if (!this.onGround()) this.vy += this.weight;
-      else this.vy = 0;
+      if (!this.onGround()) {
+        this.vy += this.weight;
+        this.frameY = 1;
+      } else {
+        this.vy = 0;
+        this.frameY= 0;
+      }
       if (this.y > this.gameHeight - this.height) this.y = this.gameHeight - this.height;
     }
     onGround() {
-      return this.y >= this.gameHeight - this.height;
+      return this.y >= this.gameHeight - this.height; 
     }
   };
 
   class Background {
-
+    constructor(gameWidth, gameHeight) {
+      this.gameWidth = gameWidth;
+      this.gameHeight = gameHeight;
+      this.image = backgroundImage;
+      this.x = 0;
+      this.y = 0;
+      this.width = 2400;
+      this.height = 720;
+    }
+    draw(context) {
+      context.drawImage(this.image, this.x, this.y)
+    }
   };
 
   class Enemy {
@@ -91,9 +107,11 @@ window.onload = () => {
 
   const input = new InputHandler();
   const player = new Player(canvas.width, canvas.height);
+  const background = new Background(canvas.width, canvas.height);
 
   const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    background.draw(ctx);
     player.draw(ctx);
     player.update(input);
     requestAnimationFrame(animate);
