@@ -50,21 +50,13 @@ window.onload = () => {
       this.weight = 1;
     }
     draw(context) {
-      context.strokeStyle = 'white';
-      context.beginPath();
-      context.arc(this.x + this.width * 0.5, this.y + this.height * 0.5, this.width * 0.5, 0, Math.PI * 2);
-      context.stroke();
-      context.strokeStyle = 'blue';
-      context.beginPath();
-      context.arc(this.x, this.y, this.width * 0.5, 0, Math.PI * 2);
-      context.stroke();
       context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
     }
     update(input, deltaTime, enemies) {
       // Collision detection
       enemies.forEach(enemy => {
-        const dx = enemy.x - this.x;
-        const dy = enemy.y - this.y;
+        const dx = (enemy.x + enemy.width * 0.5) - (this.x + this.width * 0.5);
+        const dy = (enemy.y + enemy.height * 0.5) - (this.y + this.height * 0.5);
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance < enemy.width * 0.5 + this.width * 0.5) {
           gameOver = true;
@@ -152,14 +144,6 @@ window.onload = () => {
       this.markedForDeletion = false;
     }
     draw(context) {
-      context.strokeStyle = 'white';
-      context.beginPath();
-      context.arc(this.x + this.width * 0.5, this.y + this.height * 0.5, this.width * 0.5, 0, Math.PI * 2);
-      context.stroke();
-      context.strokeStyle = 'blue';
-      context.beginPath();
-      context.arc(this.x, this.y, this.width * 0.5, 0, Math.PI * 2);
-      context.stroke();
       context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
     }
     update(deltaTime) {
