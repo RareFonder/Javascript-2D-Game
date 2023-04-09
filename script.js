@@ -3,6 +3,7 @@ window.onload = () => {
   const ctx = canvas.getContext('2d');
   canvas.width = 800; 
   canvas.height = 720;
+  let enemies = [];
 
   class InputHandler {
     constructor() {
@@ -100,11 +101,30 @@ window.onload = () => {
   };
 
   class Enemy {
-
+    constructor(gameWidth, gameHeight) {
+      this.gameWidth = gameWidth;
+      this.gameHeight = gameHeight;
+      this.width = 160;
+      this.height = 119;
+      this.image = enemyImage;
+      this.x = this.gameWidth;
+      this.y = this.gameHeight - this.height;
+      this.frameX = 0;
+    }
+    draw(context) {
+      context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+    }
+    update() {
+      this.x--;
+    }
   };
 
+  enemies.push(new Enemy(canvas.width, canvas.height));
   const handleEnemies = () => {
-
+    enemies.forEach(enemy => {
+      enemy.draw(ctx);
+      enemy.update();
+    })
   };
 
   const displayStatusText = () => {
@@ -115,13 +135,18 @@ window.onload = () => {
   const player = new Player(canvas.width, canvas.height);
   const background = new Background(canvas.width, canvas.height);
 
-  const animate = () => {
+  let lastTime = 0;
+
+  const animate = (timeStamp) => {
+    const deltaTime = timeStamp - lastTime;
+    lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     background.draw(ctx);
     background.update();
     player.draw(ctx);
     player.update(input);
+    handleEnemies();
     requestAnimationFrame(animate);
   }
-  animate();
+  animate(0);
 };
