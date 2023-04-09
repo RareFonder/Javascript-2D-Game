@@ -8,19 +8,19 @@ window.onload = () => {
     constructor() {
       this.keys = [];
       window.addEventListener('keydown', e => {
-        if (( e.key === 'ArrowDown' || 
-              e.key === 'ArrowUp' || 
-              e.key === 'ArrowLeft' || 
-              e.key === 'ArrowRight') 
+        if (( e.key === 'ArrowDown' || e.key === 's' ||
+              e.key === 'ArrowUp' || e.key === 'w' ||
+              e.key === 'ArrowLeft' || e.key === 'a' ||
+              e.key === 'ArrowRight'|| e.key === 'd') 
               && this.keys.indexOf(e.key) === -1) {
           this.keys.push(e.key);
         }
       });
       window.addEventListener('keyup', e => {
-        if (  e.key === 'ArrowDown' || 
-              e.key === 'ArrowUp' || 
-              e.key === 'ArrowLeft' || 
-              e.key === 'ArrowRight') {
+        if (  e.key === 'ArrowDown' || e.key === 's' ||
+              e.key === 'ArrowUp' || e.key === 'w' ||
+              e.key === 'ArrowLeft' || e.key === 'a' ||
+              e.key === 'ArrowRight'|| e.key === 'd') {
           this.keys.splice(this.keys.indexOf(e.key), 1);
         }
       });
@@ -36,14 +36,26 @@ window.onload = () => {
       this.x = 0;
       this.y = this.gameHeight - this.height;
       this.image = playerImage;
+      this.frameX = 0;
+      this.frameY = 0;
+      this.speed = 0;
     }
     draw(context) {
       context.fillStyle = 'white';
       context.fillRect(this.x, this.y, this.width, this.height);
-      context.drawImage(this.image, this.x, this.y, this.width, this.height);
+      context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
     }
-    update() {
-      this.x++;
+    update(input) {
+      this.x += this.speed;
+      if (input.keys.indexOf('ArrowRight') > -1 || input.keys.indexOf('d') > -1) {
+        this.speed = 5;
+      } else if (input.keys.indexOf('ArrowLeft') > -1 || input.keys.indexOf('a') > -1) {
+        this.speed = -5;
+      } else {
+        this.speed = 0;
+      }
+      if (this.x < 0) this.x = 0;
+      else if (this.x > this.gameWidth - this.width) this.x = this.gameWidth - this.width;
     }
   };
 
@@ -69,7 +81,7 @@ window.onload = () => {
   const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     player.draw(ctx);
-    player.update();
+    player.update(input);
     requestAnimationFrame(animate);
   }
   animate();
