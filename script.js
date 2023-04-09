@@ -50,13 +50,13 @@ window.onload = () => {
       this.weight = 1;
     }
     draw(context) {
-      context.strokeStyle = 'white'
+      context.strokeStyle = 'white';
       context.beginPath();
       context.arc(this.x + this.width * 0.5, this.y + this.height * 0.5, this.width * 0.5, 0, Math.PI * 2);
       context.stroke();
-      context.strokeStyle = 'blue'
+      context.strokeStyle = 'blue';
       context.beginPath();
-      context.arc(this.x * 0.5, this.y, this.width * 0.5, 0, Math.PI * 2);
+      context.arc(this.x, this.y, this.width * 0.5, 0, Math.PI * 2);
       context.stroke();
       context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
     }
@@ -152,13 +152,13 @@ window.onload = () => {
       this.markedForDeletion = false;
     }
     draw(context) {
-      context.strokeStyle = 'white'
+      context.strokeStyle = 'white';
       context.beginPath();
       context.arc(this.x + this.width * 0.5, this.y + this.height * 0.5, this.width * 0.5, 0, Math.PI * 2);
       context.stroke();
-      context.strokeStyle = 'blue'
+      context.strokeStyle = 'blue';
       context.beginPath();
-      context.arc(this.x * 0.5, this.y, this.width * 0.5, 0, Math.PI * 2);
+      context.arc(this.x, this.y, this.width * 0.5, 0, Math.PI * 2);
       context.stroke();
       context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
     }
